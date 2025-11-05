@@ -119,12 +119,7 @@ def suppresstoday_guard(driver):
         print("함께배송 오늘하루 보지않기 팝업 미노출")
 
 def select_card_brand(driver, card_name, timeout=10, attempts=3):
-    """
-        결제수단 영역의 카드 브랜드 드롭다운에서 `card_name`을 선택합니다.
-        1) card-list 안의 트리거 버튼(.txt-limit)을 클릭
-        2) 포탈로 생성되는 select-list-wrap 내부에서 옵션 버튼 클릭
-        3) 트리거 텍스트가 card_name으로 바뀌었는지 검증
-        """
+    
     for attempt in range(1, attempts + 1):
         try:
             # 1) 트리거(현재 선택된 카드 표시 버튼) 클릭
