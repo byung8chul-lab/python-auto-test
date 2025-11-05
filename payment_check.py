@@ -26,8 +26,8 @@ import re
 백오피스에서 order쏴서 받는 금액들 세팅값과 2차 검증 진행"""
 
 BASE_URL = "https://www.dev.barodev.com"
-CMS_URL = "https://cms.dev.barodev.com"
-API_URL = "https://api-v2.dev.barodev.com"
+CMS_URL = 
+API_URL = 
 
 """공통 컾포넌트"""
 
@@ -249,12 +249,7 @@ def as_int(s: str) -> int:
 """CMS 예치금 사용 후 충전용 API"""
 def cms_token_get():
     url = f"{CMS_URL}/api/login"
-    payload = {
-        "username": "cooper", "password": "baro1234!"
-    }
-    headers = {
-        "Content-Type": "application/json;charset=UTF-8"
-    }
+    
     response = requests.post(url, headers=headers, json=payload)
     """   로그인 안될때 디버깅용
     print("응답 코드:", response.status_code)
@@ -267,16 +262,10 @@ def cms_token_get():
 
 def charge_deposit(token):
     url = f"{API_URL}/deposit-histories"
-    payload = {
-        "amount": 15914451,
-        "type": "기타",
-        "user_id": "20909",
-        "deposit_type": "deposit",
-        "content": "test"
-    }
+    
     headers = {
         "Content-Type": "application/json;charset=UTF-8",
-        "Authorization": f"Baro {token}"
+        
     }
     response = requests.post(url, headers=headers, json=payload)
     assert response.status_code in (200, 201, 202, 203), f"예치금 충전 실패 : {response.status_code}"
@@ -286,13 +275,11 @@ def charge_deposit(token):
 def payment_benefits_switch_mode(token, value_benefit):
     print(f"받은 액티브값 : {value_benefit}")
     url = f"{API_URL}/payment-benefits/161/active"
-    payload = {
-        "is_active":value_benefit
-    }
+    
     print(f"payload value: {payload}")
     headers = {
         "Content-Type": "application/json;charset=UTF-8",
-        "Authorization": f"Baro {token}"
+        
     }
     response = requests.patch(url, headers=headers, json=payload)
     assert response.status_code in (200, 201, 202, 203, 204), f"결졔 혜택 변경 실패 : {response.status_code}"
@@ -306,7 +293,7 @@ def confirm_cancel_api(token, order_no):
     url = f"{API_URL}/orders/{order_no}"
     headers = {
         "Content-Type": "application/json;charset=UTF-8",
-        "Authorization": f"Baro {token}"
+        
     }
     response = requests.get(url, headers=headers)
     assert response.status_code == 200, f"실패 응답값 : {response.status_code}"
