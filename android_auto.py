@@ -311,6 +311,43 @@ def click_button_by_id(driver, element_id, retries=3):
         attempt += 1
     print(f"Failed to click button '{element_id}' after {retries} attempts.")
 
+def check_and_print_price(driver, element_id, label):
+    try:
+        price_elem = WebDriverWait(driver, 10).until(
+            EC.presence_of_element_located((AppiumBy.ID, element_id))
+        )
+        price = price_elem.text.strip()
+        if price:
+            print(f"{label} : {price}")
+        else:
+            print(f"{label} 금액 없음")
+        time.sleep(1)
+    except Exception as e:
+        print(f"{label} 금액 없음 (에러: {e})")
+        time.sleep(1)
+
+
+def check_order_price_bottom(driver):
+    check_and_print_price(
+        driver,
+        "com.baropharm.app.dev:id/tv_baropharm_total",
+        "즉시결제"
+    )
+    check_and_print_price(
+        driver,
+        "com.baropharm.app.dev:id/tv_deferred_total",
+        "후불결제"
+    )
+    check_and_print_price(
+        driver,
+        "com.baropharm.app.dev:id/tv_bnpl_total",
+        "나중결제"
+    )
+
+
+
+
+
 #주문-------------------------------------------------------------------------------------------------------------------
 proxies = {
     "http": "http://127.0.0.1:8080",
@@ -499,7 +536,7 @@ def test_login_success(driver):
 
     assert success_element.is_displayed(), "로그인 실패!"
     print("로그인 성공!")
-"""
+
 def test_payment(driver):
     click_button_by_id(driver, "com.baropharm.app.dev:id/iv_cart")
     print("장바구니 진입")
@@ -508,6 +545,8 @@ def test_payment(driver):
     click_button_by_id(driver, "com.baropharm.app.dev:id/btn_expand")
     print("주문내역 펼침")
     time.sleep(3)
+
+    check_order_price_bottom(driver)
             
     click_button_by_id(driver, "com.baropharm.app.dev:id/btn_request_order")
     print("주문하기 진입")
@@ -537,7 +576,7 @@ def test_payment(driver):
     click_button_by_id(driver, "com.baropharm.app.dev:id/iv_right_menu_1")
     print("홈으로 이동")
     time.sleep(5)
-"""
+
 @pytest.mark.input
 def test_community_check(driver):
 
@@ -614,7 +653,7 @@ def test_switching_store(driver):
     time.sleep(3)
 
     element = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((AppiumBy.ID, "com.baropharm.app.dev:id/layout_store"))
+        EC.presence_of_element_located((AppiumBy.ID, "com.baropharm.app.dev:id/tv_search_placeholder"))
     )
 
     hint_text = element.text.strip()
@@ -623,7 +662,7 @@ def test_switching_store(driver):
     assert hint_text == expected_text, f"텍스트 불일치 : 기대='{expected_text}', 실제='{hint_text}'"
     print("스토어 진입 성공")
 
-
+@pytest.mark.search
 def test_search_flow(driver):
     click_search = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((AppiumBy.ID, "com.baropharm.app.dev:id/ll_search_view"))
@@ -650,14 +689,14 @@ def test_search_flow(driver):
     assert check_success_search.is_displayed(), "검색실패"
     print("검색 성공")
  
-
+@pytest.mark.search
 def test_input_cart(driver):
 
 
-    scroll_to_element_by_partial_text(driver, "쿠퍼진짜전문의약")
+    scroll_to_element_by_partial_text(driver, "쿠퍼_전문의약품")
     time.sleep(1)
 
-    click_element_by_text(driver, "쿠퍼진짜전문의약")
+    click_element_by_text(driver, "쿠퍼_전문의약품")
     time.sleep(1)
 
     capture_screenshot(driver, "search")
